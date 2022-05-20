@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="" name="description">
+    <meta content="company directory" name="keywords">
+
+    <title>Company Directory | IT Career Switch Project 2</title>
+
+     <!-- Favicons -->
+    <link href="libs/img/pngwing.com.png" rel="icon">
+  
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel&display=swap" rel="stylesheet">
+    <!--  -->
+
+   
+    <!-- Main CSS Files -->
+    <link href="libs/css/styles.css" rel="stylesheet">
+    
+    <!-- Bootstrap-->
+    <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.min.css" crossorigin="anonymous">
+
+    
+</head>
+
+<body>
+
+      <!--preloader-->
+      <div id="preloader"></div>
+
+      <!--nav-->
+
+      <nav class="navbar navbar-expand-sm d-inline-block align-top fixed-top center">
+        
+        <div class="container">
+        
+          <a class="navbar-brand" id="logo" href="index.html">
+            <span class="logo_shadow">
+              <img src="libs/img/people.svg" class="img-responsive" style="width: 50px;" alt="logo">
+            </span>
+          </a>
+
+          <div class="input-group rounded">
+            <input type="search" class="form-control rounded" id="search_box" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+            <span class="input-group-text border-0" id="search-addon">
+              <i class="fas fa-search" id="search"></i>
+            </span>
+          </div>
+          
+          <div class="navBtns d-flex justify-content-flex-end justify-self-flex-end">
+            <span class="input-group-text border-0 mx-1" id="plus-person-addon">
+               <i class="fa-solid fa-user-plus" id="add"></i>
+            </span>
+            
+            <span class="input-group-text border-0 mx-1" id="plus-department" data-toggle="modal" data-target="#departmentModal">
+              <i class="fa-solid fa-building-user" id="addDepartment"></i>
+              
+            </span>
+            
+            <span class="input-group-text border-0 mx-1" id="plus-location" data-toggle="modal" data-target="#locationModal">
+              <i class="fa-solid fa-map-location-dot" id="addLocation"></i>
+            </span>
+          </div>
+          
+
+        </div>
+      </nav>
+
+      <!-- Add Employee Modal -->
+      <div class="modal fade" id="add-employee-modal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addEmployeeModalLabel">Add New Employee</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+            
+              <table class="table">
+                <form>
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>Name:</td>
+                    <td><input type="text" required id="firstName"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>Surname:</td>
+                    <td><input type="text" required id="lastName"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>Email:</td>
+                    <td><input type="text" required id="email"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">4</th>
+                    <td>Job Title:</td>
+                    <td><input type="text" required id="jobTitle"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">5</th>
+                    <td>
+                      <label for="department">Department:</label>
+                    </td>
+                    <td>
+                      <select class="department" id="department"></select>
+                    </td>
+                  </tr>
+                  </form>
+                </tbody>
+              </table>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary " id="addEmployeeButton">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+        
+    
+    <!-- content-->
+    
+    <div class="content">
+
+      <div class="content-employees">
+
+        <div class="sort-container"> 
+          
+          <div class="btn-group">
+            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="sort_selection">
+              Sort by:
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" id="sortLastName" value="lastName" >Surname</a>
+                <a class="dropdown-item" id="sortFirstName" value="firstName" >First Name</a>
+                <a class="dropdown-item" id="sortID" value="location">ID</a>
+                <a class="dropdown-item" id="sortEmail" value="email">Email</a>
+                <a class="dropdown-item" id="sortdepartment" value="department">Department</a>
+                <a class="dropdown-item" id="sortlocation" value="location">Location</a>
+
+              </div>
+          </div>
+        </div>
+
+        <div class="buttons" id="buttons">
+          <i class="fa-solid fa-circle-xmark fa-lg" id="backBtn" ></i>
+        </div>
+        
+
+        <div class="cards flex-container" id="cards">
+
+          <!-- CARDS -->
+          
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Employee Modal -->
+    <!-- ------------------- -->
+    
+    <!-- Department Modal -->
+    <div class="modal fade" id="departmentModal" tabindex="-1" role="dialog" aria-labelledby="departmentModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="departmentModalLabel">Add or Delete Department</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <table class="table">
+              <thead class="border-bottom">
+
+                <tr class="d-flex justify-content-around">
+                  <th scope="col-6" id="addDepartmentBtn">
+                    <i class="fa-solid fa-plus"></i>
+                  </th>
+                  <th scope="col-6" id="deleteDepartmentBtn">
+                    <i class="fa-solid fa-minus"></i>
+                  </th>
+                </tr>
+
+              </thead>
+              <tbody id="departmentModalBody">
+                 <!--      ------------     -->
+                <!--      ------------     -->
+                <!--      ------------     -->
+                
+              </tbody>
+              
+            </table>
+            
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" id="addDepartmentSubmit">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Location Modal -->
+    <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="locationModalLabel">Add or Delete Location</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <table class="table">
+              <thead class="border-bottom">
+
+                <tr class="d-flex justify-content-around">
+                  <th scope="col-6" id="addLocationBtn">
+                    <i class="fa-solid fa-plus"></i>
+                  </th>
+                  <th scope="col-6" id="deleteLocationBtn">
+                    <i class="fa-solid fa-minus"></i>
+                  </th>
+                </tr>
+
+              </thead>
+              <tbody id="locationModalBody">
+                <!--      ------------     -->
+                <!--      ------------     -->
+                <!--      ------------     -->
+              </tbody>
+              
+            </table>
+            
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary " id="addLocationSubmit">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!--JS and JQuery-->
+    <script src="libs/js/jquery-3.6.0.min.js"></script>
+    <script src="libs/js/script.js"></script>
+
+    <!--Popper-->
+    <script src="libs/@popperjs/core/dist/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    
+    <!-- Bootstrap-->
+    <script src="libs/bootstrap/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="libs/bootstrap/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+    <!--Font Awesome-->
+    <script src="libs/js/d5c70dd88c.js"></script>
+    
+    
+    
+</body>
+</html>
