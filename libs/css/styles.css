@@ -13,6 +13,7 @@ nav {
     position: relative;
     display: flex;
     justify-content: center;
+    align-content: center;
     width: 100%;
     height: 11%;
     background-color: darkcyan;   
@@ -72,18 +73,22 @@ nav {
 
 /* content */
 
+.red {
+    color: red
+}
+
 .content {
     background-color: whitesmoke;
     position: absolute;
     top: 11%;
     width: 100vw;
-    height: auto;
+    min-height: 90vh;
 }
 
 .content-employees {
     background-color: white;
     width: 84%;
-    height: 100%;
+    min-height: 88vh;
     margin: 0% 7% 0 8%;
     padding: 5% 6% 5% 6%;
     position: relative;
@@ -91,12 +96,14 @@ nav {
 
 .sort-container {
     display: flex;
+    justify-content: space-between;
     position: absolute;
     top: 5px;
     left: 3%;
     border-radius: 10%;
     padding: 0.2% 0.5%;
     font-size: 0.8em;
+    width: 92%;
 }
 
 .buttons {
@@ -107,6 +114,92 @@ nav {
     justify-content: center;
     align-content: center;
 }
+
+/*-------------------display btn------------*/
+.display {
+    float: left;
+    width: 65%;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+}
+
+
+.display-icon {
+    width: 60px;
+    height: auto;
+}
+
+.display-icon-span {
+    float: left;
+    margin: 0 2px;
+    padding: 4px 7px;
+    border: 0.5px solid rgb(207, 206, 206);
+    border-radius: 25%;
+    box-shadow: 2px 2px 3.5px rgb(146, 146, 146);
+}
+
+.display-icon-span:hover {
+    margin: 0 2px;
+
+    border: 1px solid rgb(92, 91, 91);
+}
+
+.display-icon-span:active {
+    margin: 0 3px;
+    background-color: azure;
+    border: 1px solid rgb(41, 41, 41);
+}
+
+.display-options {
+    display: none;
+    float: right;
+    align-self: center;
+}
+
+/*--------------filters btn-----------------------*/
+
+.filters {
+    float: right;
+    width: 65%;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+}
+
+
+.filter_icon {
+    width: 100px;
+    height: auto;
+}
+
+#filter-icon-span {
+    float: right;
+    margin: 0 2px;
+    padding: 4px 7px;
+    border: 0.5px solid rgb(207, 206, 206);
+    border-radius: 25%;
+    box-shadow: 2px 2px 3.5px rgb(146, 146, 146);
+}
+
+#filter-icon-span:hover {
+    margin: 0 2px;
+
+    border: 1px solid rgb(92, 91, 91);
+}
+
+#filter-icon-span:active {
+    margin: 0 3px;
+    background-color: azure;
+    border: 1px solid rgb(41, 41, 41);
+}
+
+#filter_options {
+    display: none;
+    float: left;
+    align-self: top;
+}
+
 
 #backBtn {
     display: none;
@@ -134,7 +227,7 @@ label {
 
 .btn-sm {
     font-size: 0.8em !important;
-    padding: 0px 3px;
+    padding: 0px 6px;
     margin: 0px 10px;
 }
 
@@ -149,9 +242,9 @@ label {
 }
 
 .card {
-    width: 420px;
-    margin: 0 3% 2% 3%;
-    box-shadow: 4px 3px 3px rgb(229, 229, 229) ;
+    width: 261px;
+    margin: 0 0.7% 2% 0.7%;
+    box-shadow: 4px 3px 3px rgb(229, 229, 229);
 }
 
 .delete-employee,
@@ -237,6 +330,10 @@ label {
 
 /* WEBSITE-- CONTAINER //////////////////////////////////////////////////*/
 
+#cards {
+    margin-top: 2%;
+}
+
 
 .card-header,
 .blockquote > p > span {
@@ -246,6 +343,10 @@ label {
 .card-header {
     background-color: lightskyblue !important;
     background-image: linear-gradient(to left, lightskyblue, lightblue, white);
+}
+
+.card-body {
+    font-size: xx-large !important;
 }
 
 .blockquote > p > span {
@@ -262,11 +363,106 @@ label {
     line-height: 0.4;
 }
 
+.small {
+    background-color: white !important;
+    background-image: linear-gradient(to left, rgb(255, 193, 79), rgb(249, 249, 130), white);
+}
+
 tr > th {
    display: flex;
    justify-content: center;
 }
 
+.department,
+td > input {
+    width: 100%;
+}
+
+.card-element > span {
+    line-height: 13.5px;
+}
+
+.modal-header {
+    height: 100px;
+    background-color: rgb(238, 238, 238);
+    border: 0.5px solid rgb(206, 204, 204);
+    box-shadow: 0px 3px 3px rgb(206, 204, 204);
+    border-radius: 0 0 35% 35%;
+}
+
+.modal-header {
+    width: 100%;
+}
+
+h5 {
+    width: 100%;
+    margin: 1.5% auto;
+    text-align: center;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.modal-body {
+    text-align: center;
+}
+
+table, th, tr, td, .modal-footer {
+    border: none !important;
+}
+
+.yes {
+    background-color: green !important;
+}
+
+
+
+/*          #INFO MODAL       //////////////////////////////////////////////           */
+
+#infoModalHeader {
+    height: 130px;
+    background-color: rgb(238, 238, 238);
+    border: 0.5px solid rgb(206, 204, 204);
+    box-shadow: 0px 3px 3px rgb(206, 204, 204);
+    border-radius: 0 0 48% 48%;
+}
+
+#infoModalContent {
+    padding: 2.5rem 0.5rem !important;
+    display: flexbox;
+    flex-wrap: wrap
+}
+
+#infoModalContent > h5 {
+    color: darkgreen;
+}
+
+.circle {
+    width: 88px;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 2.5px 2.5px 2.5px rgb(182, 182, 182);
+    display: flex;
+    justify-content: center;
+}
+
+.fa-bell {
+    color: black;
+}
+
+#infoModalContent > p {
+    font-size: 1.05em;
+
+}
+
+#infoModalContent > h5 {
+    font-size: 1.15em;
+
+}
+
+
+
+
+/*           MEDIA QUERIES                                */
 @media only screen and (max-width: 399px) {
 
     #logo {
@@ -290,6 +486,23 @@ tr > th {
     
 }
 
+@media only screen and (min-width: 360px) and (max-width: 450px) {
+
+    input {
+        max-width: 150px !important;
+    }
+
+    #department, .department { 
+        max-width: 250px !important;
+    }
+
+    #sort-btn-group {
+        position: absolute;
+        top: 45px;
+        left: 10px;
+    }
+
+}
 
 @media only screen and (min-width: 360px) and (max-width: 525px) {
 
@@ -297,18 +510,50 @@ tr > th {
         flex-wrap: nowrap !important;
     }
 
+    .navbar {
+        padding: 1rem 1rem !;
+    }
+
     .navBtns {
         margin: 0.8% auto;
     }
 
     .buttons {
-        margin-top: 10px !important;
-        margin-bottom: 30px !important;
+        margin-top: 43px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .content {
+        position: absolute;
+        top: 10%;
+        min-height: 90vh; 
+        margin-top: -2.5vh;
+        margin-left: 1px;
     }
 
     .content-employees { 
         width: 100% !important;
         margin: 0% !important;
+    }
+
+    .input-group  {
+        justify-content: center;
+        width: -moz-fit-content !important;
+        width: fit-content !important;
+    }
+
+    .btn-group > button {
+        height: 25px;
+    }
+
+    #cards {
+        margin-top: 7%;
+    }
+
+    #sort-btn-group {
+        position: absolute;
+        top: 45px;
+        left: 10px;
     }
 
 }
@@ -330,7 +575,7 @@ tr > th {
 
     .content {
         position: absolute;
-        top: 13%;
+        top: 11%;
         width: 100vw;
         height: auto;
     }
@@ -343,7 +588,7 @@ tr > th {
     
 
     .cards {
-        margin: 20px 0px;
+        margin: 10px 0px;
     }
     
 }
