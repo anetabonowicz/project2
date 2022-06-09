@@ -3,6 +3,7 @@
 <html lang="en">
 
 <head>
+  
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,14 +20,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel&display=swap" rel="stylesheet">
     <!--  -->
-
-   
-    <!-- Main CSS Files -->
-    <link href="libs/css/styles.css" rel="stylesheet">
-    
+  
     <!-- Bootstrap-->
     <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.min.css" crossorigin="anonymous">
-
+    
+    <!-- Main CSS Files -->
+    <link href="libs/css/styles.css" rel="stylesheet">
     
 </head>
 
@@ -37,7 +36,7 @@
 
       <!--nav-->
 
-      <nav class="navbar navbar-expand-sm d-inline-block align-top fixed-top center">
+      <nav class="navbar navbar-expand-sm d-inline-block align-center fixed-top center">
         
         <div class="container">
         
@@ -47,89 +46,123 @@
             </span>
           </a>
 
-          <div class="input-group rounded">
+          <div class="input-group rounded" id="input-group-search">
             <input type="search" class="form-control rounded" id="search_box" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-            <span class="input-group-text border-0" id="search-addon">
-              <i class="fas fa-search" id="search"></i>
-            </span>
           </div>
           
           <div class="navBtns d-flex justify-content-flex-end justify-self-flex-end">
-            <span class="input-group-text border-0 mx-1" id="plus-person-addon">
-               <i class="fa-solid fa-user-plus" id="add"></i>
+
+            
+            
+            <!-- DISPLAY OPTIONS DROPDOWN -->
+            <div class="display-options">
+              <span class="display-icon-span input-group-text border-0" id="display-personnel-icon-span">
+                <i class="fa fa-users" aria-hidden="true"></i>
+              </span>
+              <span class="display-icon-span input-group-text border-0" id="display-location-icon-span">
+                <i class="fa-solid fa-location-arrow"></i>
+              </span>
+              <span id="display-department-icon-span" class="display-icon-span  input-group-text border-0">
+                <i class="fa-solid fa-city"></i>
+              </span>
+            </div>
+
+            <div class="display-icon input-group-text border-0 mx-1" id="display-icon">
+              <span class="input-group-text border-0" id="display-icon-span">
+                <i class="fa-solid fa-display fa-lg"></i>
+              </span>
+            </div>
+
+            <span class="input-group-text border-0 mx-1" id="plus-addon">
+              <i class="fa-solid fa-plus" id="add"></i>
             </span>
             
-            <span class="input-group-text border-0 mx-1" id="plus-department" data-toggle="modal" data-target="#departmentModal">
-              <i class="fa-solid fa-building-user" id="addDepartment"></i>
-              
-            </span>
-            
-            <span class="input-group-text border-0 mx-1" id="plus-location" data-toggle="modal" data-target="#locationModal">
-              <i class="fa-solid fa-map-location-dot" id="addLocation"></i>
-            </span>
           </div>
           
 
         </div>
       </nav>
 
-      <!-- Add Employee Modal -->
-      <div class="modal fade" id="add-employee-modal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+     
+
+        <!-- Add Employee/Department/Location Modal -->
+      <div class="modal fade" id="add-all-modal" tabindex="-1" role="dialog" aria-labelledby="addAllModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="addEmployeeModalLabel">Add New Employee</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <h5 class="modal-title" id="addAllModalLabel">Add</h5>
+              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-            
               <table class="table">
-                <form>
-                <tbody>
                   <tr>
-                    <th scope="row">1</th>
-                    <td>Name:</td>
-                    <td><input type="text" required id="firstName"></td>
+                    <td scope="row" id="addNewPersonnel">Personnel</td>
+                    <td id="addNewDepartment">Department</td>
+                    <td id="addNewLocation">Location</td>
                   </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Surname:</td>
-                    <td><input type="text" required id="lastName"></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Email:</td>
-                    <td><input type="text" required id="email"></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">4</th>
-                    <td>Job Title:</td>
-                    <td><input type="text" required id="jobTitle"></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">5</th>
-                    <td>
-                      <label for="department">Department:</label>
-                    </td>
-                    <td>
-                      <select class="department" id="department"></select>
-                    </td>
-                  </tr>
-                  </form>
-                </tbody>
               </table>
 
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary " id="addEmployeeButton">Save</button>
-            </div>
+              <form action="libs/php/addPersonnelByID.php" method="POST" id="add-employee">
+                <div class="form-group">
+                  <label for="firstName"><i class="red">* </i>Name:</label>
+                  <input type="name" class="form-control" id="firstName" name="firstName" aria-describedby="" placeholder="Enter First Name" required>
+                </div>
+                <div class="form-group">
+                  <label for="lastName"><i class="red">* </i>Last Name:</label>
+                  <input type="name" class="form-control" id="lastName" name="lastName" aria-describedby="" placeholder="Enter Last Name" required>
+                </div>
+                <div class="form-group">
+                  <label for="email"><i class="red">* </i>Email:</label>
+                  <input type="email" class="form-control" id="email" name="email" aria-describedby="" placeholder="Enter email" required>
+                </div>
+                <div class="form-group">
+                  <label for="jobTitle">Job Title:</label>
+                  <input type="text" class="form-control" id="jobTitle" name="jobTitle" aria-describedby="" placeholder="Enter job title">
+                </div>
+                <div class="form-group">
+                  <label for="department"><i class="red">* </i>Department:</label>
+                  <select class="form-control department" id="department" name="department"></select>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary" id="addAllButton">Save</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+              </form>
+            
+              <form action="/libs/php/insertDepartment.php" method="POST" id="add-department">
+                <div class="form-group">
+                  <label for="newDepartment"><i class="red">* </i>Department Name:</label>
+                  <input type="text" class="form-control" id="newDepartment" name="newDepartment" aria-describedby="" placeholder="Enter Department Name">
+                </div>
+                <div class="form-group">
+                  <label for="locationNewDepartment"><i class="red">* </i>Select location:</label>
+                  <select id="locationNewDepartment" class="form-control location" name="locationNewDepartment"></select>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary" id="addAllButton">Save</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+              </form>
+
+              <form action="/libs/php/insertLocation.php" method="POST" id="add-location">
+                <div class="form-group">
+                  <label for="newLocation"><i class="red">* </i>Location:</label>
+                  <input type="text" class="form-control" id="newLocation" name="newLocation" aria-describedby="" placeholder="Enter Location Name">
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="addAllButton">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </form>
+
+          </div>
+            
           </div>
         </div>
-      </div>
-        
+      
+    </div>   
     
     <!-- content-->
     
@@ -137,133 +170,118 @@
 
       <div class="content-employees">
 
-        <div class="sort-container"> 
-          
-          <div class="btn-group">
-            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="sort_selection">
+        <div class="sort-container">
+
+          <div class="display">
+
+           
+
+             
+          <!-- SORT DROPDOWN -->
+          <div class="btn-group" id="sort-btn-group">
+            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" id="sort_selection" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Sort by:
             </button>
             <div class="dropdown-menu">
-                <a class="dropdown-item" id="sortLastName" value="lastName" >Surname</a>
+                <a class="dropdown-item" id="sortdepartment" value="department">Department</a>
+                <a class="dropdown-item" id="sortEmail" value="email">Email</a>
                 <a class="dropdown-item" id="sortFirstName" value="firstName" >First Name</a>
                 <a class="dropdown-item" id="sortID" value="location">ID</a>
-                <a class="dropdown-item" id="sortEmail" value="email">Email</a>
-                <a class="dropdown-item" id="sortdepartment" value="department">Department</a>
+                <a class="dropdown-item" id="sortLastName" value="lastName">LastName</a>
                 <a class="dropdown-item" id="sortlocation" value="location">Location</a>
+            </div>
+          </div><!-- END OF SORT DROPDOWN -->
 
+        </div><!-- END OF DISPLAY DIV-->
+
+          <!-- FILTERS BTNS -->
+          <div class="filters">
+
+            <div class="" id="filter_options">
+              <!-- FILTERS SLIDE DROPDOWNS-->
+              <div class="btn-group">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Department:
+                </button>
+                <div class="dropdown-menu" id="departmentFilterDropdown"></div>
               </div>
+              <div class="btn-group">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Location:
+                </button>
+                <div class="dropdown-menu" id="locationFilterDropdown"></div>
+              </div>
+            </div>
+            
+            <div class="filter-icon" id="filter-icon">
+              <span id="filter-icon-span">
+                <i class="fa-solid fa-filter fa-lg"></i>
+              </span>
+            </div>
+            <!-- END OF FILTERS OPTIONS-->
           </div>
+          <!-- END OF FILTERS BTNS -->
         </div>
+         <!-- END OF SORT-CONTAINER DIV -->
+
 
         <div class="buttons" id="buttons">
-          <i class="fa-solid fa-circle-xmark fa-lg" id="backBtn" ></i>
+          <i class="fa-solid fa-circle-xmark fa-lg" id="backBtn"></i>
         </div>
         
 
-        <div class="cards flex-container" id="cards">
+        <div class="cards flex-container justify-content-around" id="cards">
 
           <!-- CARDS -->
+        </div>
+
+      </div> 
+      <!-- END OF CONTENT-EMPLOYEES DIV -->
+      
+      <!-- Edit Employee Modal -->
+      <!-- ------------------- -->
+   
+     
+      </div>
+
+
+        
+
+        <!-- Edit Department/Location Modal -->
+        <div class="d-flex justify-content-center editDepOrLocModal" id="editDepOrLocModal"></div>
+        <!-- ------------------- -->
+
+        
           
+        <!-- Universal Modal (used to display messages) -->
+        <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content clearfix">
 
-        </div>
-      </div>
-    </div>
+                <div id="infoModalHeader" class="modal-header d-flex justify-content-center">
+                    
+                </div>
+                <div id="infoModalContent" class="modal-body d-flex justify-content-center align-content-center">
+                      
+                </div>
+                <div class="modal-footer" id="infoModalFooter">
+                    <button type="button" class="btn btn-secondary" id="infoModalClose" data-bs-dismiss="modal">Close</button>
+                </div>
 
-    <!-- Edit Employee Modal -->
-    <!-- ------------------- -->
-    
-    <!-- Department Modal -->
-    <div class="modal fade" id="departmentModal" tabindex="-1" role="dialog" aria-labelledby="departmentModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="departmentModalLabel">Add or Delete Department</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <table class="table">
-              <thead class="border-bottom">
-
-                <tr class="d-flex justify-content-around">
-                  <th scope="col-6" id="addDepartmentBtn">
-                    <i class="fa-solid fa-plus"></i>
-                  </th>
-                  <th scope="col-6" id="deleteDepartmentBtn">
-                    <i class="fa-solid fa-minus"></i>
-                  </th>
-                </tr>
-
-              </thead>
-              <tbody id="departmentModalBody">
-                 <!--      ------------     -->
-                <!--      ------------     -->
-                <!--      ------------     -->
-                
-              </tbody>
-              
-            </table>
-            
-
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" id="addDepartmentSubmit">Save</button>
+            </div>
           </div>
         </div>
-      </div>
+
+
+
     </div>
-
-
-    <!-- Location Modal -->
-    <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="locationModalLabel">Add or Delete Location</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <table class="table">
-              <thead class="border-bottom">
-
-                <tr class="d-flex justify-content-around">
-                  <th scope="col-6" id="addLocationBtn">
-                    <i class="fa-solid fa-plus"></i>
-                  </th>
-                  <th scope="col-6" id="deleteLocationBtn">
-                    <i class="fa-solid fa-minus"></i>
-                  </th>
-                </tr>
-
-              </thead>
-              <tbody id="locationModalBody">
-                <!--      ------------     -->
-                <!--      ------------     -->
-                <!--      ------------     -->
-              </tbody>
-              
-            </table>
-            
-
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary " id="addLocationSubmit">Save</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- END OF CONTENT DIV -->
 
 
 
 
-    <!--JS and JQuery-->
+    <!--JQuery-->
     <script src="libs/js/jquery-3.6.0.min.js"></script>
-    <script src="libs/js/script.js"></script>
 
     <!--Popper-->
     <script src="libs/@popperjs/core/dist/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
@@ -275,7 +293,10 @@
     <!--Font Awesome-->
     <script src="libs/js/d5c70dd88c.js"></script>
     
-    
+    <!--JS-->
+    <script src="libs/js/script.js"></script>
+
+
     
 </body>
 </html>
