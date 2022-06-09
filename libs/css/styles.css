@@ -44,6 +44,19 @@ nav {
     margin: 0.9% auto;
 }
 
+#add-department,
+#add-location {
+    display: none;
+}
+
+#addNewPersonnel:hover,
+#addNewDepartment:hover,
+#addNewLocation:hover {
+    text-decoration: underline;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 1.02em;
+}
 
 
 
@@ -128,12 +141,13 @@ nav {
 .display-icon {
     width: 60px;
     height: auto;
+    display: contents;
 }
 
 .display-icon-span {
     float: left;
-    margin: 0 2px;
-    padding: 4px 7px;
+    margin: 0 5px 0 2px;
+    padding: 8px 10px;
     border: 0.5px solid rgb(207, 206, 206);
     border-radius: 25%;
     box-shadow: 2px 2px 3.5px rgb(146, 146, 146);
@@ -247,8 +261,8 @@ label {
     box-shadow: 4px 3px 3px rgb(229, 229, 229);
 }
 
-.delete-employee,
-.edit-employee  {
+.delete_Btn,
+.edit_Btn {
     float: right;
     margin: 0 2px;
     padding: 2px 5px;
@@ -257,30 +271,30 @@ label {
     box-shadow: 3px 3px 5px rgb(193, 219, 255);
 }
 
-.delete-employee:hover {
+.delete_Btn:hover {
     background-color:rgb(255, 158, 158);
     border: 1.2px solid rgb(253, 80, 80);
     opacity: 0.85;
 }
 
-.edit-employee:hover {
+.edit_Btn:hover {
     background-color: rgb(163, 241, 255);
     border: 1.2px solid rgb(0, 216, 254);
     opacity: 0.85;
 }
 
-.delete-employee:active {
+.delete_Btn:active {
     opacity: 1;
     border: 1.2px solid rgb(250, 79, 79);
 }
 
-.edit-employee:active {
+.edit_Btn:active {
     opacity: 1;
     border: 1.2px solid rgba(100, 216, 254, 0.901);
 }
 
-.delete-employee > i,
-.edit-employe > i {
+.delete_Btn > i,
+.edit_Btn > i {
     opacity: 1;
     z-index: 5;
 }
@@ -383,11 +397,9 @@ td > input {
 }
 
 .modal-header {
-    height: 100px;
-    background-color: rgb(238, 238, 238);
-    border: 0.5px solid rgb(206, 204, 204);
-    box-shadow: 0px 3px 3px rgb(206, 204, 204);
-    border-radius: 0 0 35% 35%;
+    height: 70px;
+    border: 1px solid rgb(206, 204, 204);
+    border-radius: 0 0 0 0;
 }
 
 .modal-header {
@@ -406,7 +418,7 @@ h5 {
     text-align: center;
 }
 
-table, th, tr, td, .modal-footer {
+table, th, tr, td {
     border: none !important;
 }
 
@@ -414,16 +426,19 @@ table, th, tr, td, .modal-footer {
     background-color: green !important;
 }
 
+label {
+    text-transform: capitalize;
+}
 
 
 /*          #INFO MODAL       //////////////////////////////////////////////           */
 
 #infoModalHeader {
-    height: 130px;
-    background-color: rgb(238, 238, 238);
+    height: 80px;
+    /*background-color: rgb(238, 238, 238);
     border: 0.5px solid rgb(206, 204, 204);
     box-shadow: 0px 3px 3px rgb(206, 204, 204);
-    border-radius: 0 0 48% 48%;
+    border-radius: 0 0 48% 48%;*/
 }
 
 #infoModalContent {
@@ -436,18 +451,7 @@ table, th, tr, td, .modal-footer {
     color: darkgreen;
 }
 
-.circle {
-    width: 88px;
-    border-radius: 50%;
-    background-color: white;
-    box-shadow: 2.5px 2.5px 2.5px rgb(182, 182, 182);
-    display: flex;
-    justify-content: center;
-}
 
-.fa-bell {
-    color: black;
-}
 
 #infoModalContent > p {
     font-size: 1.05em;
@@ -498,7 +502,7 @@ table, th, tr, td, .modal-footer {
 
     #sort-btn-group {
         position: absolute;
-        top: 45px;
+        top: 5px;
         left: 10px;
     }
 
@@ -552,7 +556,7 @@ table, th, tr, td, .modal-footer {
 
     #sort-btn-group {
         position: absolute;
-        top: 45px;
+        top: 5px;
         left: 10px;
     }
 

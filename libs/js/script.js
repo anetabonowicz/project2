@@ -1,13 +1,3 @@
-/* PRELOADER */
-
-$(window).on('load', function () {
-    if ($('#preloader').length) {
-        //$('#preloader').delay(1150).fadeOut('slow', function () {
-        //$(this).remove();
-    //});
-}});
-
-
 /* GLOBAL VAR */
 
 let currentEmoloyee;
@@ -25,6 +15,8 @@ let locationsList = [];
 let filterTerm;
 let departmentValue;
 let locationValue;
+let hasEmployeesToggle = false;
+
 
  
 /* FUNCTIONS */
@@ -70,13 +62,43 @@ $('#search_box').on('keyup keypress', event => {
 
 // ADD NEW EMPLOYEE
 
-$('#plus-person-addon').on('click', event => {
-    
+$('#addNewPersonnel').on('click', event => {
+
+    $('#add-department').css('display', 'none');
+    $('#add-location').css('display', 'none');
+    $('#add-employee').css('display', 'block');
+    $('#addNewPersonnel').css('font-weight', '900');
+    $('#addNewDepartment').css('font-weight', '400');
+    $('#addNewLocation').css('font-weight', '400');
+
+    $('#add-employee')[0].reset();
+    $('#add-department')[0].reset();
+    $('#add-location')[0].reset();
+
+})
+
+$('#plus-addon').on('click', event => {
+
+    $('#add-department').css('display', 'none');
+    $('#add-location').css('display', 'none');
+    $('#add-employee').css('display', 'block');
+    $('#addNewPersonnel').css('font-weight', '900');
+    $('#addNewDepartment').css('font-weight', '400');
+    $('#addNewLocation').css('font-weight', '400');
+
+    resetInfoModalContent();
     updateDepartments('department');
-    $('#add-employee-modal').modal('show');
+    $('#add-all-modal').modal('show');
 
-    $('#addEmployeeButton').on('click', event =>  {
+    $('#add-employee').on('submit', event =>  {
 
+        event.preventDefault();
+        event.stopPropagation();
+        $('#addAllButton').attr("disabled", 'disabled')
+                    .html(`<span class="spinner-border spinner-border-sm text-light"></span><span>Loading</span>`);
+                        
+        
+        
 		let addName = document.getElementById("firstName").value;
 		let addSurname = document.getElementById("lastName").value;
 		let addEmail = document.getElementById("email").value;
@@ -87,75 +109,80 @@ $('#plus-person-addon').on('click', event => {
 			addDepartment = $(this).find('option:selected').data('value');
 		});
 
-		
-		let departmentsID = departmentsList.find(element => {
-			if (element.name === addDepartment) {
-			  return element.id;
-			}
-		  
-			return false;
-		  });
-		departmentsID = departmentsID['id'];
+      
+        if(addName && addSurname && addEmail) {
+            
+            //SEND 
+            $.ajax({
 
+                url:'libs/php/addPersonnelByID.php',
+                type:'POST',
+                dataType: 'json',
+                data:{
+                    firstName: addName,
+                    lastName: addSurname,
+                    email: addEmail,
+                    jobTitle: addJobTitle, 
+                    department: addDepartment
+                },
+    
+                success:(result) => {
 
-        $('#addEmployeeButton').html(`<span class="spinner-border spinner-border-sm text-light"></span><span>Loading</span>`)
-                                .attr("disabled", true);
-
-        //SEND 
-        $.ajax({
-
-            url:'libs/php/addPersonnelByID.php',
-            type:'POST',
-            dataType: 'json',
-            data:{
-                firstName: addName,
-                lastName: addSurname,
-                email: addEmail,
-                jobTitle: addJobTitle, 
-                department: departmentsID
-            },
-
-            success:(result) => {
-                document.getElementById('firstName').value = "";
-                document.getElementById('lastName').value = "";
-                document.getElementById('email').value = "";
-                document.getElementById('jobTitle').value = "";
-
-                resetInfoModalContent();
-                $('#add-employee-modal').modal('hide');
-                $('#infoModalContent').append(`<h5>Success!</h5>
-                    <p>Employee ${addName} ${addSurname} successfully added.</p>`);
-                $('#infoModal').modal('show');
-                $('#cards').empty();
-                getEmployeeList();
-                $('#addEmployeeButton').html("Save").attr("disabled", false);
-               
-              
-              
-            }, error: function(errorThrown) {
-                $('#add-employee-modal').modal('hide');
-                resetInfoModalContent();
-                $('#infoModalContent').append(`<h5 style="color:red">Error!</h5><br><p>Please fill in all required fields.</p>`);
-                $('#infoModal').modal('show');
-            }
-        });
+                    document.getElementById('firstName').value = "";
+                    document.getElementById('lastName').value = "";
+                    document.getElementById('email').value = "";
+                    document.getElementById('jobTitle').value = "";
+                    $('#addAllButton').html(`Save`).attr("disabled", false);
+    
+    
+                    resetInfoModalContent();
+                    $('#add-all-modal').modal('hide');
+                    $('#infoModalContent').append(`<h5>Success!</h5>
+                        <p>Employee ${addName} ${addSurname} successfully added.</p>`);
+                    $('#infoModal').modal('show');
+                    $('#cards').empty();
+                    getEmployeeList();
+                    
+                  
+                }, error: function(errorThrown) {
+                    $('#addAllButton').html(`Save`).attr("disabled", false);
+                    $('#add-all-modal').modal('hide');
+                    resetInfoModalContent();
+                    $('#infoModalContent').append(`<h5 style="color:red">Error!</h5><br><p>Please fill in all required fields.</p>`);
+                    $('#infoModal').modal('show');
+                }
+            });
+        }
 
     });
 
 });
 
  //ADD DEPARTMENT             
- $('#plus-department').on('click', event => {
+ $('#addNewDepartment').on('click', event => {
+
+    $('#add-employee')[0].reset();
+    $('#add-department')[0].reset();
+    $('#add-location')[0].reset();
+
+    $('#add-employee').css('display', 'none');
+    $('#add-location').css('display', 'none');
+    $('#add-department').css('display', 'block');
+    
+    $('#addNewPersonnel').css('font-weight', '400');
+    $('#addNewDepartment').css('font-weight', '900');
+    $('#addNewLocation').css('font-weight', '400');
 
     document.getElementById('locationNewDepartment').value = "";
     updateLocations(`#locationNewDepartment`);
-    $(`#departmentModal`).modal('show');
-
 
     
-    $('#addDepartmentSubmit').on('click', event => {
+    $('#add-department').on('submit', event => {
 
-        $('#addDepartmentSubmit').html(`<span class="spinner-border spinner-border-sm text-light"></span><span>Loading</span>`)
+        event.preventDefault();
+        event.stopPropagation();
+
+        $('.btn-primary').html(`<span class="spinner-border spinner-border-sm text-light"></span><span>Loading</span>`)
                    .attr("disabled", true);
 
         let newDepartment =  document.getElementById('newDepartment').value;
@@ -165,17 +192,7 @@ $('#plus-person-addon').on('click', event => {
             locationNewDepartment = $(this).find('option:selected').data('value');
         });
 
-        let newDepartmentLocID = locationsList.find(element => {
-            if (element.name === locationNewDepartment) {
-              return element.id;
-            }
-          
-            return false;
-          });
-
-        newDepartmentLocID = newDepartmentLocID['id'];
-
-        if(newDepartmentLocID) {
+        if(newDepartment) {
 
             $.ajax({
 
@@ -184,22 +201,23 @@ $('#plus-person-addon').on('click', event => {
                 dataType: 'json',
                 data:{
                     name : newDepartment,
-                    locationID : newDepartmentLocID
+                    locationID : locationNewDepartment
                 },
 
                 success:(result) => {
-                    $('#departmentModal').modal('hide');
+                    $('#add-all-modal').modal('hide');
                     document.getElementById("newDepartment").value = "";
                     resetInfoModalContent();
                     
                     $('#infoModalContent').html(`<h5>Success!</h5><p>Department ${newDepartment} successfully added.</p>`);
                     $('#infoModal').modal('show');
-                    $('#addDepartmentSubmit').html("Save").attr("disabled", false);
-                    updateSelectedDepartment(departmentsList);
+                    $('.btn-primary').html("Save").attr("disabled", false);
                     resetInformation('d');
                          
                 }, error: function(jqXHR, textStatus, errorThrown) {
-                    $('#departmentModal').modal('hide');  
+                    $('.btn-primary').html("Save").attr("disabled", false);
+
+                    $('#add-all-modal').modal('hide');  
                     resetInfoModalContent();
                     $('#infoModalContent').append(`<h5 style="color:red">Error!</h5><br><p>Please fill in all required fields.</p>`);
                     $('#infoModal').modal('show'); 
@@ -209,9 +227,11 @@ $('#plus-person-addon').on('click', event => {
         } else {
             
             document.getElementById("newDepartment").value = "";
+            $('#addAllButton').html("Save").attr("disabled", false);
+
             $('#infoModalContent').html(``)
             resetInfoModalContent();
-            $('#locationModalBody').empty();
+            $('#add-all-modal').removeData();
             $('#infoModalContent').html(`<h5 style="color:red">Error!</h5><br><p>Please fill in all required fields.</p>`);
              $('#infoModal').modal('show');
         }
@@ -222,13 +242,26 @@ $('#plus-person-addon').on('click', event => {
 
 
 //ADD LOCATION               
-$('#plus-location').on('click', event => {
+$('#addNewLocation').on('click', event => {
 
-    $(`#locationModal`).modal('show');
+    $('#add-employee')[0].reset();
+    $('#add-department')[0].reset();
+    $('#add-location')[0].reset();
 
-    $('#addLocationSubmit').on('click', event => {
+    $('#add-employee').css('display', 'none');
+    $('#add-department').css('display', 'none');
+    $('#add-location').css('display', 'block');
+    
+    $('#addNewPersonnel').css('font-weight', '400');
+    $('#addNewDepartment').css('font-weight', '400');
+    $('#addNewLocation').css('font-weight', '900');
 
-        $('#addLocationSubmit').html(`<span class="spinner-border spinner-border-sm text-light"></span><span>Loading</span>`)
+    $('#add-location').on('submit', event => {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        $('#addAllButton').html(`<span class="spinner-border spinner-border-sm text-light"></span><span>Loading</span>`)
                     .attr("disabled", true);
 
         let newLocation = document.getElementById('newLocation').value;
@@ -246,18 +279,24 @@ $('#plus-location').on('click', event => {
 
                 success:(result) => {
                     document.getElementById("newLocation").value = "";
+                    getAllLocations();
+                    displayLocationCards(locationsList);
+                    //resetInformation('l');
+                    $('#addAllButton').html("Save").attr("disabled", false);
                     resetInfoModalContent();
-                    $('#locationModal').modal('hide');
+                    $('#add-all-modal').modal('hide');
                     
                     $('#infoModalContent').html(`<h5>Success!</h5><br>
                         <p>${newLocation} added successfully.</p>`);
                     $('#infoModal').modal('show'); 
                     
-                    resetInformation('l');
-                    $('#addLocationSubmit').html("Save").attr("disabled", false);
+                    
                     
                 }, error: function(jqXHR, textStatus, errorThrown) {
                         console.log(jqXHR, textStatus, errorThrown);
+                        $('#add-all-modal').modal('hide');
+                        $('#addAllButton').html("Save").attr("disabled", false);
+
                         resetInfoModalContent();
                         $('#infoModalContent').append(`<h5 style="color:red">Error!</h5>`);
                         $('#infoModal').modal('show'); 
@@ -284,7 +323,6 @@ function addFilterOptions() {
 
     $('#departmentFilterDropdown').empty();
     $('#locationFilterDropdown').empty();
-    console.log(departmentsList)
 
    
     departmentsList.forEach(element => {
@@ -325,8 +363,8 @@ $('#filter-icon-span').on('click', event => {
 
 
 function selectItem(departmentValue, locationValue) {
-    console.log(departmentValue)
-    //
+    
+    
     $.ajax({
         url:'libs/php/filter.php',
         type:'POST',
@@ -380,13 +418,13 @@ const displayLocationCards = (data) => {
         let number = element.id;
         let cardLocation = departmentsList.filter(element => element.locationID === number);
       
-        let card = `<div class="card" id="location${element.id}">
+        let card = `<div class="card" id="${element.id}">
                         <div class="card-header small">
                         ${element.name} 
-                            <span class="delete-employee" id="delete-location${element.id}">
+                            <span class="delete_Btn">
                                 <i class="fa-solid fa-trash"></i>
                             </span>
-                            <span class="edit-employee" id="edit-location${element.id}">
+                            <span class="edit_Btn" id="edit-location${element.id}">
                                 <i class="fa-solid fa-pen"></i>
                             </span>
                         </div>
@@ -400,35 +438,17 @@ const displayLocationCards = (data) => {
 
 
         $('#cards').append(card);
-        let deleteId = element.id
-        let deleteValue = element.name;
 
         for(let i = 0; i < cardLocation.length; i++) {
             $(`#departmentInLocation${element.id}`).append(cardLocation[i]['name'] + `, `);
 
         }
 
-        $(`#delete-location${element.id}`).on('click', Event => {
-            resetInfoModalContent()
-
-            $('#infoModalContent').append(`<p>Are you sure you want to delete this record (${element.name})?</p>`)
-            $('#infoModalFooter').append(`<button type="submit" class="btn btn-primary yes" id="yes${element.id}">Yes</button>`)
-            $('#infoModal').modal('show');
-
-            $(`#yes${element.id}`).on('click', Event => {              
-                deleteSelectedLocation(number, element.name, deleteValue);    
-            });
-       
-        })
-
-        $(`#edit-location${element.id}`).on('click', Event => {
-
-
-            let editModal =  `<div class="modal fade" id="editModal${element.id}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+        let editModal =  `<div class="modal fade" id="editModal${element.id}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="">Edit Location</h5>
+                                        <h5 class="modal-title">Edit Location</h5>
                                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -455,24 +475,88 @@ const displayLocationCards = (data) => {
                                     </div>
                                 </div>
                             </div>`;
-            
-            $(`#editDepOrLocModal`).append(editModal);
-            $(`#editModal${element.id}`).modal('show');
-
-
-            $(`#editModalSubmit${element.id}`).on('click', event => {
-                let inputValue = document.getElementById(`edit${element.id}`).value
-                
-                updateSelectedLocation(number, inputValue);
-
-            })
-            });
-        });
-
         
-        locationsList.forEach(location => {
-            getTotalEmployees(`l.id = `, `${location.id}`, `employeeLoc`, locationsList)
+        $(`.edit_Btn`).click(function(){
+
+            var locId =  $(this).closest('.card').attr('id');
+            var locName =  $(this).closest('.card-header').text().trim();
+                
+            $(`#editDepOrLocModal`).append(editModal);
+            $(`#editModal${locId}`).modal('show');
+    
+    
+            $(`#editModalSubmit${locId}`).on('click', event => {
+                let inputValue = document.getElementById(`edit${locId}`).value
+                
+                updateSelectedLocation(locId, inputValue);
+    
+            })
+        
         });
+    });
+
+    $(`.delete_Btn`).click(function(){
+
+        var locId =  $(this).closest('.card').attr('id');
+        var locName =  $(this).closest('.card-header').text().trim();
+
+            
+        $.ajax({
+
+            url:'libs/php/getTotalEmployeeBy.php',
+            type:'POST',
+            dataType: 'json',
+            async: false,
+            data:{
+                info : "l.id =",
+                id: locId
+            },
+
+            success:(result) => {
+
+                if(Number(result.data[0].pc) === 0) {
+                    hasEmployeesToggle = true;
+                } else {
+                    hasEmployeesToggle = false;
+                }
+
+            }, error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR, textStatus, errorThrown);
+            }
+        });
+
+        if(hasEmployeesToggle) {
+           
+            resetInfoModalContent()
+            $('.btn-secondary').hide();
+            $('#infoModalContent').append(`<p>Are you sure you want to delete this record (<span style="font-style: italic;">${locName}</span>)?</p>`)
+            $('#infoModalFooter').append(`<button type="submit" class="btn btn-primary yes">Yes</button>`)
+            $('#infoModalFooter').append(`<button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>`)
+
+            $('#infoModal').modal('show');
+
+            $(".yes").on('click', Event => {
+
+                deleteSelectedLocation(locId, locName);
+                
+            });
+    
+        } else if(!hasEmployeesToggle){
+    
+            resetInfoModalContent();
+            $('#infoModalContent').append(`<h5 style="color:red">Error!</h5><br>
+                <p>${locName} still has employees attached.</p>`);
+            $(`#infoModal`).modal('show');
+    
+        }
+       
+
+    });
+        
+    locationsList.forEach(location => {
+        getTotalEmployees(`l.id = `, `${location.id}`, `employeeLoc`, locationsList)
+    });
+
 }
 
 
@@ -519,7 +603,7 @@ const displayDepartmentCards = (data) => {
     $('#cards').empty();
     
     data.forEach(element => {
-        console.log(element)
+        
         let number = element.locationID;
         let cardLocation = locationsList.filter(element => element.id === number);
         
@@ -529,12 +613,12 @@ const displayDepartmentCards = (data) => {
         }
         
 
-        let card = `<div class="card" id="department${element.id}">
+        let card = `<div class="card" id="${element.id}">
                         <div class="card-header small">${element.name}
-                            <span class="delete-employee" id="delete-department${element.id}">
+                            <span class="delete_Btn">
                                 <i class="fa-solid fa-trash"></i>
                             </span>
-                            <span class="edit-employee" id="edit-department${element.id}">
+                            <span class="edit_Btn" id="edit-department${element.id}">
                                 <i class="fa-solid fa-pen"></i>
                             </span>
                         </div>
@@ -549,22 +633,6 @@ const displayDepartmentCards = (data) => {
 
         let updateId = element.id;
         $('#cards').append(card);
-        $(`#delete-department${element.id}`).on('click', Event => {
-            resetInfoModalContent()
-
-            $('#infoModalContent').append(`<p>Are you sure you want to delete this record (${element.name})?</p>`)
-            $('#infoModalFooter').append(`<button type="submit" class="btn btn-primary yes" id="yes${element.id}">Yes</button>`)
-
-            $('#infoModal').modal('show');
-
-            $(`#yes${element.id}`).on('click', Event => {
-
-                deleteSelectedDepartment(element.id, element.name);
-                
-            });
-           
-        });
-
         $(`#edit-department${element.id}`).on('click', Event => {
 
             
@@ -610,34 +678,83 @@ const displayDepartmentCards = (data) => {
             document.getElementById(`locationEditDepartment${element.id}`).value = "";
             updateLocations(`#locationEditDepartment${element.id}`);
             $(`#editDepartmentModal${element.id}`).modal('show');
-            //$(`#locationEditDepartment${element.id}`).click(function() {
-              //  editDepartmentsLocValue = $(this).find('option:selected').data('value');
-            //});
             $(`#editDepartmentSubmit${element.id}`).one('click', Event => {
                 if(updateId > 0) {
                     let updateDepartmentValue = document.getElementById(`editDepartment${element.id}`).value;
-                    let editDepartmentsLocValue = document.getElementById(`locationEditDepartment${element.id}`).value;
+                    let newDepartment = document.getElementById(`locationEditDepartment${element.id}`).value;
                     
-                    updateSelectedDepartment(updateId, element.name, editDepartmentsLocValue, updateDepartmentValue);
+                    updateSelectedDepartment(updateId, newDepartment, updateDepartmentValue);
                     
                 }
             });
         });
 
+    });
+
+    $(`.delete_Btn`).click(function(){
+            
+        var deptId =  $(this).closest('.card').attr('id');
+        var deptName =  $(this).closest('.card-header').text().trim();
+
+        $.ajax({
+
+            url:'libs/php/getTotalEmployeeBy.php',
+            type:'POST',
+            dataType: 'json',
+            async: false,
+            data:{
+                info : "d.id =",
+                id: deptId
+            },
+
+            success:(result) => {
+                if(Number(result.data[0].pc) === 0) {
+                    hasEmployeesToggle = true;
+                } else {
+                    hasEmployeesToggle = false;
+                }
+                
+            }, error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR, textStatus, errorThrown);
+            }
         });
 
-        departmentsList.forEach(department => {
-            getTotalEmployees(`d.id = `, `${department.id}`, `employeeDep`, departmentsList)
-        });
+        if(hasEmployeesToggle) {
+            
+            resetInfoModalContent()
+            $('.btn-secondary').hide();
+            $('#infoModalContent').append(`<p>Are you sure you want to delete this record (<span style="font-style: italic;">${deptName}</span>)?</p>`)
+            $('#infoModalFooter').append(`<button type="submit" class="btn btn-primary yes">Yes</button>`)
+            $('#infoModalFooter').append(`<button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>`)
+    
+            $('#infoModal').modal('show');
+    
+            $(".yes").on('click', Event => {
+                console.log(4)
+                deleteSelectedDepartment(deptId, deptName);
+                
+            });
+        } else {
+            resetInfoModalContent();
+            $('#infoModalContent').append(`<h5 style="color:red">Error!</h5><br>
+                <p>${deptName} still has employees attached.</p>`);
+            $(`#infoModal`).modal('show');
+        }
+
+    });
+   
+
+    departmentsList.forEach(department => {
+        getTotalEmployees(`d.id = `, `${department.id}`, `employeeDep`, departmentsList)
+    });
         
 }
 
 
-
-const updateSelectedDepartment = (updateId, name, location, updateDepartmentValue) => {
+const updateSelectedDepartment = (updateId, location, updateDepartmentValue) => {
     
-    
-    let updateLocationId = locationsList.filter(element => element.name === location)
+    let updateLocationId = locationsList.filter(element => element.name === location);
+   
     updateLocationId = updateLocationId[0]['id'];
     
     
@@ -675,35 +792,7 @@ const updateSelectedDepartment = (updateId, name, location, updateDepartmentValu
 
 
 const deleteSelectedDepartment = (deleteId, name) => {
-
-    let hasEmployeesToggle = false;
-
-    $.ajax({
-
-        url:'libs/php/getTotalEmployeeBy.php',
-        type:'POST',
-        dataType: 'json',
-        async: false,
-        data:{
-            info : "d.id =",
-            id: deleteId
-        },
-
-        success:(result) => {
-
-            if(result.data.length === 0) {
-                hasEmployeesToggle = true;
-            } else {
-                hasEmployeesToggle = false;
-            }
-
-        }, error: function(jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR, textStatus, errorThrown);
-        }
-    });
-
-    if(hasEmployeesToggle) {
-
+    
         $.ajax({
 
             url:'libs/php/deleteDepartmentByID.php',
@@ -718,92 +807,49 @@ const deleteSelectedDepartment = (deleteId, name) => {
                 resetInformation('d');
                 resetInfoModalContent();
                 
-                $('#departmentModal').modal('hide');
-                $('#infoModalContent').append(`<h5>Success</h5><p>${name} deleted successfully.</p>`);
+                $('#infoModalContent').append(`<h5>Success!</h5><p>${name} deleted successfully.</p>`);
                 $('#infoModal').modal('show');
                 $('#addDepartmentSubmit').html("Save").attr("disabled", false);
+                hasEmployeesToggle = false;
                 
             }, error: function(jqXHR, textStatus, errorThrown) {
                     console.log(jqXHR, textStatus, errorThrown);
             }
         });
 
-
-    }  else if(!hasEmployeesToggle){
-
-        resetInfoModalContent();
-        $('#infoModalContent').append(`<h5 style="color:red">Error!</h5><br>
-            <p>${name} still has employees attached.</p>`);
-        $(`#infoModal`).modal('show');
-
-    }
 
    
 
 }
 
 
-const deleteSelectedLocation = (deleteId, name, deleteValue) => {
+const deleteSelectedLocation = (deleteId, name) => {
 
-    let hasEmployeesToggle = false;
 
     $.ajax({
 
-        url:'libs/php/getTotalEmployeeBy.php',
+        url:'libs/php/deleteLocationByID.php',
         type:'POST',
         dataType: 'json',
-        async: false,
         data:{
-            info : "l.id =",
             id: deleteId
         },
 
         success:(result) => {
+            getAllLocations();
+            displayLocationCards(locationsList);
+            resetInfoModalContent();
 
-            if(result.data.length === 0) {
-                hasEmployeesToggle = true;
-            } else {
-                hasEmployeesToggle = false;
-            }
-
+            $('#infoModalContent').append(`<h5>Success</h5><br>
+                    <p>${name} deleted successfully. </p>`);
+            $(`#infoModal`).modal('show');
+            hasEmployeesToggle = false;
+            
         }, error: function(jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR, textStatus, errorThrown);
         }
     });
-    
 
-    if(hasEmployeesToggle) {
-
-        $.ajax({
-
-            url:'libs/php/deleteLocationByID.php',
-            type:'POST',
-            dataType: 'json',
-            data:{
-                id: deleteId
-            },
-    
-            success:(result) => {
-                resetInformation('l');
-                resetInfoModalContent();
-    
-                $('#infoModalContent').append(`<h5>Success</h5><br>
-                        <p>${name} deleted successfully. </p>`);
-                $(`#infoModal`).modal('show');
-                
-            }, error: function(jqXHR, textStatus, errorThrown) {
-                    console.log(jqXHR, textStatus, errorThrown);
-            }
-        });
-
-    } else if(!hasEmployeesToggle){
-
-        resetInfoModalContent();
-        $('#infoModalContent').append(`<h5 style="color:red">Error!</h5><br>
-            <p>${name} still has employees attached.</p>`);
-        $(`#infoModal`).modal('show');
-
-    }
    
 }
 
@@ -840,7 +886,7 @@ const getTotalEmployees = (query, id, elementName, list) => {
             
             list.forEach(department => {
                 
-                $(`#${elementName}${id}`).html(result.data.length);
+                $(`#${elementName}${id}`).html(result.data[0].pc);
 
             });
         
@@ -885,15 +931,15 @@ const displayCards = (data) => {
     data.forEach(element => {
 
 
-        let card = `<div class="card" id="employee${element.id}">
+        let card = `<div class="card" id="${element.id}">
                         <div class="card-header">
-                        ${element.firstName}  ${element.lastName} 
-							<span class="delete-employee" id="delete-employee${element.id}">
+							<span class="delete_Btn">
 								<i class="fa-solid fa-user-xmark"></i>
 							</span>
-							<span class="edit-employee" id="edit-employee${element.id}">
+							<span class="edit_Btn">
 								<i class="fa-solid fa-user-pen"></i>
 							</span>
+                            <div class="name">${element.firstName} ${element.lastName}</div>
                         </div>
                         <div class="card-body">
 							<blockquote class="blockquote mb-0">
@@ -907,26 +953,34 @@ const displayCards = (data) => {
 
 
         $('#cards').append(card);
-        
 
-        //EDIT EMPLOYEE BUTTON
-        $(`#edit-employee${element.id}`).on('click', event => {
-            $(`#edit-employee-modal${element.id}`).modal('show');
-        });
+    });
+    
+    //EDIT EMPLOYEE BUTTON
+    $(`.edit_Btn`).click(function(){
 
-        //DELETE EMPLOYEE
-        $(`#delete-employee${element.id}`).on('click', event => {
+        let editId = $(this).closest('.card').attr('id');
+        resetInfoModalContent();
+        $(`#edit-employee-modal${editId}`).modal('show');
+    });
+
+    //DELETE EMPLOYEE
+    $(`.delete_Btn`).click(function(){
+
+        let deleteId = $(this).closest('.card').attr('id');
+        let deleteName = $(this).closest('.name').text().trim();
+
             
-            resetInfoModalContent()
+        resetInfoModalContent()
+        $('.btn-secondary').hide();
+        $('#infoModalContent').append(`<p>Are you sure you want to delete this record <span style="font-style: italic;">${deleteName}</span>?</p>`);
+        $('#infoModalFooter').append(`<button type="submit" class="btn btn-primary yes" id="yes${deleteId}" >Yes</button>`);
+        $('#infoModalFooter').append(`<button type="button" class="btn btn-danger" id="" data-bs-dismiss="modal">No</button>`);
+        
+        $('#infoModal').modal('show');
 
-            $('#infoModalContent').append(`<p>Are you sure you want to delete this record? </p>`);
-            $('#infoModalFooter').append(`<button type="submit" class="btn btn-primary yes" id="yes${element.id}" >Yes</button>`);
-            $('#infoModal').modal('show');
-
-            $(`#yes${element.id}`).on('click', event => {
-                deleteEmployee(`${element.id}`);
-            });
-
+        $(`.yes`).on('click', event => {
+            deleteEmployee(`${deleteId}`);
         });
 
     });
@@ -941,24 +995,25 @@ const getEmployeeList = () => {
 
         url:'libs/php/getAll.php',
         type:'GET',
+        async: false,
         dataType: 'json',
         data:{},
 
         success:(result) => {
-
+            console.log(1)
             database = result.data;
 
             database.forEach(element => {
 
-                let card = `<div class="card" id="employee${element.id}">
+                let card = `<div class="card" id="${element.id}">
                                 <div class="card-header">
-									<span class="delete-employee" id="delete-employee${element.id}">
+									<span class="delete_Btn">
 										<i class="fa-solid fa-user-xmark"></i>
 									</span>
-									<span class="edit-employee" id="edit-employee${element.id}">
+									<span class="edit_Btn">
 										<i class="fa-solid fa-user-pen"></i>
 									</span>
-                                    <div>${element.firstName} ${element.lastName}</div>
+                                    <div class="fullName">${element.firstName} ${element.lastName}</div>
                                 </div>
                                 <div class="card-body">
 									<blockquote class="blockquote mb-0">
@@ -971,190 +1026,204 @@ const getEmployeeList = () => {
                             </div>`      
 
                 $('#cards').append(card);
-
-                //EDIT EMPLOYEE BUTTON
-                $(`#edit-employee${element.id}`).on('click', event => {
-                    $(`#edit-employee-modal${element.id}`).modal('show');
-                });
-
-                //DELETE EMPLOYEE
-
-                $(`#delete-employee${element.id}`).on('click', event => {
-
-                    resetInfoModalContent()
-
-                    $('#infoModalContent').append(`<p>Are you sure you want to delete this record? </p>`);
-                    $('#infoModalFooter').append(`<button type="submit" class="btn btn-primary yes" id="yes${element.id}" >Yes</button>`);
-                    $('#infoModal').modal('show');
-
-                    $(`#yes${element.id}`).on('click', event => {
-                        
-                        deleteEmployee(`${element.id}`);
-
-                    });
-                    
-                });
+            
             });     
- 
-            displayCardModals(result.data);
+            displayCardModals();
+            console.log(2)
 
         }, error: function(jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR, textStatus, errorThrown);
          }
+   
     });
-  
+    console.log(3)
 
+
+    //EDIT EMPLOYEE BUTTON
+    $(`.edit_Btn`).click(function(){
+        resetInfoModalContent();
+        
+        let editId = $(this).closest('.card').attr('id');
+        $(`#edit-employee-modal${editId}`).modal('show');
+    });
+
+    console.log(4)
+
+    
+    //DELETE EMPLOYEE
+    $('.delete_Btn').click(function(){
+        
+        let deleteId = $(this).closest('.card').attr('id');
+        let deleteName = $(this).closest('.card-header').find("div").first().text();
+
+            
+        resetInfoModalContent()
+        $('.btn-secondary').hide();
+        $('#infoModalContent').append(`<p>Are you sure you want to delete this record <span style="font-style: italic;">${deleteName}</span>?</p>`);
+        $('#infoModalFooter').append(`<button type="submit" class="btn btn-primary yes" id="yes${deleteId}" >Yes</button>`);
+        $('#infoModalFooter').append(`<button type="button" class="btn btn-danger" id="" data-bs-dismiss="modal">No</button>`);
+        
+        $('#infoModal').modal('show');
+
+        $(`.yes`).on('click', event => {
+            deleteEmployee(`${deleteId}`);
+        });
+
+    });
+
+         
 }
 
 
 
 
 //EDIT BUTTON BEHAVIOUR
-const displayCardModals = (v) => {
+const displayCardModals = () => {
     
+    $.ajax({
 
-    v.forEach(element => {
+        url:'libs/php/getAll.php',
+        type:'GET',
+        dataType: 'json',
+        data:{},
 
-
-        let edit = `<div class="modal fade" id="edit-employee-modal${element.id}" tabindex="-1" role="dialog" aria-labelledby="editEmployeeModalLabel${element.id}" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-								<h5 class="modal-title" id="editEmployeeModalLabel${element.id}">Edit Existing Employee</h5>
-								<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-                            </div>
-                            <div class="modal-body">
-
-                            <table class="table">
-                                <tbody>
-                                <tr>
-                                    <th scope="row"></th>
-                                    <td>ID:</td>
-                                    <td><input type="text" required disabled value="${element.id}" id="editId${element.id}" ></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"></th>
-                                    <td>First Name:</td>
-                                    <td><input type="text" required value="${element.firstName}" id="editName${element.id}"></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"></th>
-                                    <td>Surname:</td>
-                                    <td><input type="text" value="${element.lastName}" required id="editLastName${element.id}"></td>
-                                </tr>
-                                <tr>
-									<th scope="row"></th>
-									<td>Email:</td>
-									<td><input type="text" value="${element.email}" required id="editEmial${element.id}"></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"></th>
-                                    <td><label for="jobTitlen${element.id}">Job Title:</label></td>
-                                    <td><input type="text" value="${element.jobTitle}" id="editjobTitle${element.id}" required></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"></th>
-										<td>
-										<label for="department2${element.id}">Department:</label>
-										</td>
-                                    <td>
-                                   		<select class="department" id="departmentEdit${element.id}"></select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"></th>
-										<td>
-										<label for="location${element.id}">Location:</label>
-										</td>
-                                    <td>
-                                  	  <select id="locationEdit${element.id}" class="location" disabled></select>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary " id="editEmployeeButton${element.id}">Save</button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>`;
+        success:(result) => {
+            
+            let update= result.data;
+            update.forEach(element => {
 
 
-        $('.content').append(edit);
-        $(`#locationEdit${element.id}`).append(`<option value="${element.location}">${element.location}</option>`);
-        $(`#departmentEdit${element.id}`).empty();
-        let currentID = `departmentEdit${element.id}`;
+                let edit = `<div class="modal fade" id="edit-employee-modal${element.id}" tabindex="-1" role="dialog" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editEmployeeModalLabel">Edit Employee</h5>
+                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
         
-        updateDepartments(currentID);
+                                    <form action="/libs/php/updatePersonnelByID.php" method="POST" id="edit-employee">
+                                        
+                                        <div class="form-group">
+                                            <label for="firstName"><i class="red">* </i>Name:</label>
+                                            <input type="name" class="form-control" id="editName${element.id}" aria-describedby="" value="${element.firstName}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="editLastName${element.id}"><i class="red">* </i>Last Name:</label>
+                                            <input type="name" class="form-control" id="editLastName${element.id}" aria-describedby="" value="${element.lastName}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="editEmial${element.id}"><i class="red">* </i>Email:</label>
+                                            <input type="email" class="form-control" id="editEmial${element.id}" aria-describedby="" value="${element.email}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="editjobTitle${element.id}">Job Title:</label>
+                                            <input type="text" class="form-control" id="editjobTitle${element.id}" aria-describedby="" value="${element.jobTitle}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="department2${element.id}"><i class="red">* </i>Department:</label>
+                                            <select class="form-control department" id="departmentEdit${element.id}"></select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="location${element.id}">Location:</label>
+                                            <select class="form-control location" id="locationEdit${element.id}" disabled></select>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary " id="editEmployeeButton${element.id}">Save</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </form>
+                                   
+                                    </div>
+                                   
+                                </div>
+                                </div>
+                            </div>`;
+        
+        
+                $('.content').append(edit);
+                $(`#locationEdit${element.id}`).append(`<option value="${element.location}">${element.location}</option>`);
+                $(`#departmentEdit${element.id}`).empty();
+                let currentID = `departmentEdit${element.id}`;
+                
+                updateDepartments(currentID);
 
-        var fetchedDepartment = element.department;
-        var mySelect = document.getElementById(`departmentEdit${element.id}`);
- 
+                
+                var fetchedDepartment = element.department;
+                var mySelect = document.getElementById(`departmentEdit${element.id}`);
 
-        for(var i, j = 0; i = mySelect.options[j]; j++) {
-            if(i.value == fetchedDepartment) {
-                mySelect.selectedIndex = j;
-                break;
-            }
-        }
 
-        $(`#editEmployeeButton${element.id}`).on('click', function() {
+                for(var i, j = 0; i = mySelect.options[j]; j++) {
+                    
+                    if(i.text == fetchedDepartment) {
+                        mySelect.selectedIndex = j;
+                        break;
+                    }
+                }
+                
+        
+                $(`#editEmployeeButton${element.id}`).on('click', function() {
+                    resetInfoModalContent();
+                    $(`#editEmployeeButton${element.id}`).html(`<span class="spinner-border spinner-border-sm text-light"></span><span>Loading</span>`)
+                                    .attr("disabled", true);
 
-            for(let i = 0; i < departments.length; i++) {
+                   
 
-                departOption = `<option value="${departments[i]}">${departments[i]}</option>`;
-                $(`#departmentEdit${element.id}`).append(departOption);
-            }
+                    for(let i = 0; i < departments.length; i++) {
+        
+                        departOption = `<option value="${departments[i]}">${departments[i]}</option>`;
+                        $(`#departmentEdit${element.id}`).append(departOption);
+                    }
+        
+            
+        
+                    for(let i = 0; i < locations.length; i++) {
+        
+                        locOption = `<option value="${locations[i]}">${locations[i]}</option>`
+                        $(`#locationEdit${element.id}`).append(locOption);
+        
+                    } 
+        
+                    let editName = document.getElementById(`editName${element.id}`).value;
+                    let editlastName = document.getElementById(`editLastName${element.id}`).value;
+                    let editEmail = document.getElementById(`editEmial${element.id}`).value;
+                    let editjobTitle =document.getElementById(`editjobTitle${element.id}`).value; 
+                    let editDepartment = document.getElementById(`departmentEdit${element.id}`).value;
+        
+        
+                    $(`#departmentEdit${element.id}`).change(function() {
+                        editDepartment = $(this).find('option:selected').data('text');
+                    });
+        
+                    $(`#departmentEdit${element.id}`).on('change', event => {
+                        $(`#locationEdit${element.id}`).css("value", element.location)
+                    })
+        
+                    /*
+                    let editDepartmentsID = departmentsList.find(element => {
+                        if (element.name === editDepartment) {
+                          return element.id;
+                        }
+                      
+                        return false;
+                      });
+                    
+                    editDepartmentsID = editDepartmentsID['id'];
+                      */
+                    updateEmployee(`${element.id}`, editName, editlastName, editEmail, editjobTitle, editDepartment);
+        
+                });
+            });
+            
+        
+        }, error: function(jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR, textStatus, errorThrown);
+         }
+    });
 
     
-
-            for(let i = 0; i < locations.length; i++) {
-
-                locOption = `<option value="${locations[i]}">${locations[i]}</option>`
-                $(`#locationEdit${element.id}`).append(locOption);
-
-            } 
-
-
-            $(`#editEmployeeButton${element.id}`).html(`<span class="spinner-border spinner-border-sm text-light"></span><span>Loading</span>`)
-                            .attr("disabled", true);
-
-
-            let editName = document.getElementById(`editName${element.id}`).value;
-            let editlastName = document.getElementById(`editLastName${element.id}`).value;
-            let editEmail = document.getElementById(`editEmial${element.id}`).value;
-            let editjobTitle =document.getElementById(`editjobTitle${element.id}`).value; 
-            let editDepartment = document.getElementById(`departmentEdit${element.id}`).value;
-
-
-            $(`#departmentEdit${element.id}`).change(function() {
-                editDepartment = $(this).find('option:selected').data('value');
-            });
-
-            $(`#departmentEdit${element.id}`).on('change', event => {
-                $(`#locationEdit${element.id}`).css("value", element.location)
-            })
-
-			
-			let editDepartmentsID = departmentsList.find(element => {
-				if (element.name === editDepartment) {
-				  return element.id;
-				}
-			  
-				return false;
-			  });
-			
-			editDepartmentsID = editDepartmentsID['id'];
-
-            updateEmployee(`${element.id}`, editName, editlastName, editEmail, editjobTitle, editDepartmentsID);
-
-        });
-    });
 }
 
 
@@ -1243,9 +1312,10 @@ const getAllDepartments = () => {
             departments = [];
             departmentsList = [];
 
+            //departmentsList.length = 0
         
             results['data'].forEach(element => {
-                departments.push(element.name);
+                //departments.push(element.name);
                 departmentsList.push(element);
             });
 
@@ -1260,9 +1330,9 @@ const getAllDepartments = () => {
 
 //UPDATE DEPARTMENTS
 const updateDepartments = (id) => {
-
-    for(let i = 0; i < departments.length; i++) {
-        departOption = `<option value="${departments[i]}">${departments[i]}</option>`
+    
+    for(let i = 0; i < departmentsList.length; i++) {
+        departOption = `<option value="${departmentsList[i].id}">${departmentsList[i].name}</option>`
         $(`#${id}`).append(departOption);
     }   
 
@@ -1284,9 +1354,11 @@ const getAllLocations = () => {
 
             locations = [];
             locationsList = [];
+            //locationsList.length = 0
+
 
             results['data'].forEach(element => {
-                locations.push(element.name);
+                //locations.push(element.name);
                 locationsList.push(element);
             });
 
@@ -1303,8 +1375,8 @@ const updateLocations = (id) => {
 
     let locOption;
 
-    for(let i = 0; i < locations.length; i++) {
-        locOption = `<option value="${locations[i]}">${locations[i]}</option>`
+    for(let i = 0; i < locationsList.length; i++) {
+        locOption = `<option value="${locationsList[i].id}">${locationsList[i].name}</option>`
         $(`${id}`).append(locOption);
     } 
 
@@ -1391,7 +1463,9 @@ $('#backBtn').on('click', event => {
 const resetInfoModalContent = () => {
 
     $('#infoModalContent').empty();
+    $(".btn-danger").remove();
     $(".yes").remove();
+    $('.btn-secondary').show();
    
 }
 
@@ -1400,7 +1474,12 @@ $(document).ready(function(){
     getAllDepartments();
     getAllLocations();
     getEmployeeList();  
-    $('#preloader').delay(200).fadeOut('slow', function () {
+
+    /* PRELOADER */
+    if ($('#preloader').length) {
+        $('#preloader').delay(300).fadeOut('slow', function () {
         $(this).remove();
     });
+    }
+
 });
